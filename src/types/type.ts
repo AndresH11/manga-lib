@@ -9,7 +9,7 @@ export type responseListManga = {
   totalPage?: number;
   currentPage: number;
   data: {
-    _id: number;
+    _id: string;
     image_thumbnail: string;
     title: string;
     href: string;

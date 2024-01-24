@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 // import axios from "axios";
 // import * as cheerio from "cheerio";
-import { Manga, MangaType } from './src';
+/*import { Manga, MangaType } from './src';*/
 
 // void (async () => {
 //   const t = await axios("https://ww5.mangakakalot.tv/");
@@ -40,8 +40,10 @@ import { Manga, MangaType } from './src';
 //   };
 // });
 
-const t = new Manga().build(MangaType.ASURASCANS);
+/*const t = new Manga().build(MangaType.MANGADEX);
 
 void (async () => {
-  console.log(await t.getListLatestUpdate());
-})();
+  //console.log(await t.search('naruto'));
+  //console.log(await t.getDetailManga('6b1eb93e-473a-4ab3-9922-1a66d2a29a4a'));
+  console.log(await t.getDataChapter('a9d38ece-c007-433f-beb9-3a7d2554fc3f'));
+})();*/

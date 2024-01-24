@@ -1,37 +1,37 @@
 export type ResponseDataChapterInfoData = {
   result: string;
   response: string;
-  data: _Data;
+  data: Data;
 };
 
-type _Data = {
+type Data = {
   id: string;
   type: string;
-  attributes: _DataAttributes;
-  relationships: _Relationship[];
+  attributes: DataAttributes;
+  relationships: Relationship[];
 };
 
-type _DataAttributes = {
-  volume: string;
+type DataAttributes = {
+  volume: null;
   chapter: string;
   title: string;
   translatedLanguage: string;
   externalUrl: null;
-  publishAt: string;
-  readableAt: string;
-  createdAt: string;
-  updatedAt: string;
+  publishAt: Date;
+  readableAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
   pages: number;
   version: number;
 };
 
-type _Relationship = {
+type Relationship = {
   id: string;
   type: string;
-  attributes: _RelationshipAttributes;
+  attributes: RelationshipAttributes;
 };
 
-type _RelationshipAttributes = {
+type RelationshipAttributes = {
   name?: string;
   altNames?: unknown[];
   locked?: boolean;
@@ -40,7 +40,7 @@ type _RelationshipAttributes = {
   ircChannel?: null;
   discord?: string;
   contactEmail?: string;
-  description?: _Description[] | null;
+  description?: PurpleDescription | null;
   twitter?: string;
   mangaUpdates?: null;
   focusedLanguages?: string[];
@@ -49,13 +49,13 @@ type _RelationshipAttributes = {
   inactive?: boolean;
   publishDelay?: null;
   exLicensed?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   version: number;
-  title?: _Title;
-  altTitles?: _AltTitle[];
+  title?: Title;
+  altTitles?: AltTitle[];
   isLocked?: boolean;
-  links?: _Links;
+  links?: Links;
   originalLanguage?: string;
   lastVolume?: string;
   lastChapter?: string;
@@ -63,7 +63,7 @@ type _RelationshipAttributes = {
   status?: string;
   year?: number;
   contentRating?: string;
-  tags?: _Tag[];
+  tags?: Tag[];
   state?: string;
   chapterNumbersResetOnNewVolume?: boolean;
   availableTranslatedLanguages?: string[];
@@ -72,39 +72,7 @@ type _RelationshipAttributes = {
   roles?: string[];
 };
 
-type _Links = {
-  al: string;
-  ap: string;
-  bw: string;
-  kt: string;
-  mu: string;
-  amz: string;
-  cdj: string;
-  ebj: string;
-  mal: string;
-  raw: string;
-  engtl: string;
-};
-
-type _Tag = {
-  id: string;
-  type: string;
-  attributes: _TagAttributes;
-  relationships: unknown[];
-};
-
-type _TagAttributes = {
-  name: _Title;
-  description: _Description;
-  group: string;
-  version: number;
-};
-
-type _Title = {
-  en: string;
-};
-
-type _AltTitle = {
+type AltTitle = {
   ko?: string;
   my?: string;
   th?: string;
@@ -126,10 +94,44 @@ type _AltTitle = {
   ja?: string;
 };
 
-type _Description = {
+type PurpleDescription = {
   en: string;
-  run: string;
+  ru: string;
   uk: string;
   'es-la': string;
-  'pr-br': string;
+  'pt-br': string;
 };
+
+type Links = {
+  al: string;
+  ap: string;
+  bw: string;
+  kt: string;
+  mu: string;
+  amz: string;
+  cdj: string;
+  ebj: string;
+  mal: string;
+  raw: string;
+  engtl: string;
+};
+
+type Tag = {
+  id: string;
+  type: Type;
+  attributes: TagAttributes;
+  relationships: unknown[];
+};
+
+type TagAttributes = {
+  name: Title;
+  description: string;
+  group: string;
+  version: number;
+};
+
+type Title = {
+  en: string;
+};
+
+type Type = 'tag';

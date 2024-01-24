@@ -2,12 +2,22 @@ import { ResponseChapterData } from './responseChapterData';
 import { ResponseDataChapterInfoData } from './responseDataChapterInfoData';
 import { ResponseDetailsChapters } from './responseDetailsChapters';
 import { ResponseDetailsGenres } from './responseDetailsGenres';
-import { ResponseSearchMangaDex } from './responseSearch';
+import { ResponseSearch } from './responseSearch';
+import { ListLatesUpdate } from './listLatestUpdate';
+import { Cover } from './cover';
+import {
+  ResponseChapterMangaDex,
+  ResponseDetailMangaDex,
+} from './responseMangaDex';
 
 export {
   ResponseChapterData,
   ResponseDataChapterInfoData,
   ResponseDetailsChapters,
   ResponseDetailsGenres,
-  ResponseSearchMangaDex,
+  ResponseSearch,
+  ListLatesUpdate,
+  ResponseDetailMangaDex,
+  ResponseChapterMangaDex,
+  Cover,
 };

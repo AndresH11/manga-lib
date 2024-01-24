@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const src_1 = require("./src");
-const t = new src_1.Manga().build(src_1.MangaType.ASURASCANS);
+const t = new src_1.Manga().build(src_1.MangaType.MANGADEX);
 void (() => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(yield t.getListLatestUpdate());
+    console.log(yield t.getDataChapter('a9d38ece-c007-433f-beb9-3a7d2554fc3f'));
 }))();

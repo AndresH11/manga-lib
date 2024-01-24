@@ -20,9 +20,7 @@ class Mangadex {
         this.all_genres = [];
     }
     getListByGenre(genre, page, status, sort) {
-        return __awaiter(this, void 0, void 0, function* () {
-            throw new Error('Method not implemented.');
-        });
+        throw new Error('Method not implemented.');
     }
     getListLatestUpdate(page) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -62,19 +60,23 @@ class Mangadex {
         });
     }
     getDetailManga(url) {
+        var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
-            const sourceId = url;
-            let author = 'null';
-            let title = 'null';
-            let status = 'null';
-            const genres = [];
-            yield axios_1.default
-                .get(`https://api.mangadex.org/manga/${sourceId}?includes[]=artist&includes[]=author&includes[]=cover_art`)
-                .then(function (response) {
-                const infoData = response.data.data;
-                author = infoData.relationships[0].attributes.name;
-                title = infoData.attributes.title.en;
-                status = infoData.attributes.status;
+            try {
+                const sourceId = url;
+                const genres = [];
+                const responseGenres = yield axios_1.default.get(`https://api.mangadex.org/manga/${sourceId}?includes[]=artist&includes[]=author&includes[]=cover_art`);
+                const responseGenresAxios = responseGenres.data;
+                const infoData = responseGenresAxios.data;
+                const author = (_b = (_a = infoData.relationships[0].attributes) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
+                const title = (_c = infoData.attributes.title.en) !== null && _c !== void 0 ? _c : 'null';
+                const status = (_d = infoData.attributes.status) !== null && _d !== void 0 ? _d : 'null';
+                const description = (_e = infoData.attributes.description) !== null && _e !== void 0 ? _e : 'null';
+                const links = infoData.attributes.links;
+                const originalLanguage = infoData.attributes.originalLanguage;
+                const year = infoData.attributes.year;
+                const availableTranslatedLanguages = infoData.attributes.availableTranslatedLanguages;
+                const relationships = infoData.relationships;
                 infoData.attributes.tags.map((e) => {
                     genres.push({
                         url: `https://mangadex.org/tag/` + e.id,
@@ -82,15 +84,10 @@ class Mangadex {
                         path: '/tag/' + e.id,
                     });
                 });
-            })
-                .catch(function (error) {
-                console.log(error);
-            });
-            const chapters = [];
-            yield axios_1.default
-                .get(`https://api.mangadex.org/manga/${sourceId}/feed?translatedLanguage[]=en&includes[]=scanlation_group&&includes[]=user&order[volume]=desc&order[chapter]=desc&offset=0&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic`)
-                .then(function (response) {
-                const chapterData = response.data.data;
+                const chapters = [];
+                const responseChapters = yield axios_1.default.get(`https://api.mangadex.org/manga/${sourceId}/feed?translatedLanguage[]=es-la&includes[]=scanlation_group&&includes[]=user&order[volume]=desc&order[chapter]=desc&offset=0&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic`);
+                const responseChaptersAxio = responseChapters.data;
+                const chapterData = responseChaptersAxio.data;
                 chapterData.map((e) => {
                     chapters.push({
                         path: '/' + e.id,
@@ -99,64 +96,71 @@ class Mangadex {
                         title: e.attributes.title,
                     });
                 });
-            })
-                .catch(function (error) {
+                return {
+                    path: this.baseUrl + `/title/${sourceId}`,
+                    url,
+                    author,
+                    genres,
+                    title,
+                    status,
+                    description,
+                    year,
+                    relationships,
+                    links,
+                    originalLanguage,
+                    availableTranslatedLanguages,
+                    chapters,
+                };
+            }
+            catch (error) {
                 console.log(error);
-            });
-            return {
-                path: this.baseUrl + `/title/${sourceId}`,
-                url,
-                author,
-                genres,
-                title,
-                status,
-                chapters,
-            };
+                return error;
+            }
         });
     }
     getDataChapter(url_chapter, url, path, prev_chapter, next_chapter) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const sourceId = url_chapter;
-            const chapter_data = [];
-            let title = 'null';
-            yield axios_1.default
-                .get(`https://api.mangadex.org/chapter/${sourceId}?includes[]=scanlation_group&includes[]=manga&includes[]=user`)
-                .then(function (response) {
-                const infoData = response.data.data;
+            try {
+                const sourceId = url_chapter;
+                const chapter_data = [];
+                const responseInfoData = yield axios_1.default.get(`https://api.mangadex.org/chapter/${sourceId}?includes[]=scanlation_group&includes[]=manga&includes[]=user`);
+                const responseAxiosInfo = responseInfoData.data;
+                const infoData = responseAxiosInfo.data;
+                const externalUrl = infoData.attributes.externalUrl;
+                const pages = infoData.attributes.pages;
                 let mangaId = 0;
                 for (let i = 0; i < infoData.relationships.length; i++)
                     if (infoData.relationships[i].type == 'manga') {
                         mangaId = i;
                         break;
                     }
-                title = `${infoData.relationships[mangaId].attributes.title.en} chap ${infoData.attributes.chapter} [${infoData.attributes.title}]`;
-            })
-                .catch(function (error) {
-                console.log(error);
-            });
-            yield axios_1.default
-                .get(`https://api.mangadex.org/at-home/server/${sourceId}?forcePort443=false`)
-                .then(function (response) {
-                const hash = response.data.chapter.hash;
-                response.data.chapter.data.map((e, i) => {
+                const title = `${(_a = infoData.relationships[mangaId].attributes.title) === null || _a === void 0 ? void 0 : _a.en} chap ${infoData.attributes.chapter} [${infoData.attributes.title}]`;
+                const responseImgData = yield axios_1.default.get(`https://api.mangadex.org/at-home/server/${sourceId}?forcePort443=false`);
+                const responseAxiosImgData = responseImgData.data;
+                const hash = responseAxiosImgData.chapter.hash;
+                responseAxiosImgData.chapter.data.map((e, i) => {
                     chapter_data.push({
                         _id: i,
-                        src_origin: `https://uploads.mangadex.org/data/${hash}/${response.data.chapter.data[i]}`,
-                        alt: title + ' id: ' + i,
+                        src_origin: `https://uploads.mangadex.org/data/${hash}/${responseAxiosImgData.chapter.data[i]}`,
+                        alt: `${title} id: ${i}`,
                     });
                 });
-            })
-                .catch(function (error) {
+                return {
+                    url: `${this.baseUrl}/chapter/${sourceId}`,
+                    path: `/chapter/${sourceId}`,
+                    title,
+                    externalUrl,
+                    pages,
+                    chapter_data,
+                    prev_chapter: null,
+                    next_chapter: null,
+                };
+            }
+            catch (error) {
                 console.log(error);
-            });
-            return {
-                url: `${this.baseUrl}/chapter/${sourceId}`,
-                path: `/chapter/${sourceId}`,
-                title,
-                chapter_data,
-                prev_chapter: null,
-                next_chapter: null,
-            };
+                return error;
+            }
         });
     }
     search(keyword, page) {

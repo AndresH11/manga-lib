@@ -1,4 +1,4 @@
-export type ResponseSearch = {
+export type ListLatesUpdate = {
   result: string;
   response: string;
   data: Datum[];
@@ -19,14 +19,14 @@ export type DatumAttributes = {
   altTitles: AltTitle[];
   description: PurpleDescription;
   isLocked: boolean;
-  links: Links | null;
-  originalLanguage: string;
-  lastVolume: null | string;
-  lastChapter: null | string;
+  links: Links;
+  originalLanguage: OriginalLanguage;
+  lastVolume: string;
+  lastChapter: string;
   publicationDemographic: null | string;
   status: Status;
   year: number | null;
-  contentRating: ContentRating;
+  contentRating: string;
   tags: Tag[];
   state: State;
   chapterNumbersResetOnNewVolume: boolean;
@@ -34,43 +34,76 @@ export type DatumAttributes = {
   updatedAt: Date;
   version: number;
   availableTranslatedLanguages: string[];
-  latestUploadedChapter: null | string;
+  latestUploadedChapter: string;
 };
 
 export type AltTitle = {
-  en?: string;
-  ko?: string;
   ja?: string;
   fr?: string;
-  th?: string;
-  'zh-hk'?: string;
-  'ja-ro'?: string;
-  it?: string;
+  en?: string;
+  es?: string;
+  pl?: string;
+  ru?: string;
+  de?: string;
+  'pt-br'?: string;
+  id?: string;
   'zh-ro'?: string;
   zh?: string;
+  'zh-hk'?: string;
+  it?: string;
+  vi?: string;
+  'ja-ro'?: string;
+  tr?: string;
+  'es-la'?: string;
+  ms?: string;
+  th?: string;
+  ko?: string;
+  hr?: string;
+  pt?: string;
+  ar?: string;
+  uk?: string;
+  hi?: string;
+  'ko-ro'?: string;
+  fa?: string;
+  ka?: string;
+  ne?: string;
 };
-
-export type ContentRating = 'safe' | 'erotica';
 
 export type PurpleDescription = {
   en?: string;
+  es?: string;
+  ru?: string;
+  tr?: string;
+  'pt-br'?: string;
   fr?: string;
+  'es-la'?: string;
+  it?: string;
+  pt?: string;
+  ar?: string;
   ja?: string;
-  ko?: string;
-  th?: string;
-  'zh-hk'?: string;
-  zh?: string;
+  uk?: string;
 };
 
 export type Links = {
+  al?: string;
   ap?: string;
+  bw?: string;
+  kt?: string;
   mu?: string;
+  amz?: string;
+  ebj?: string;
+  mal?: string;
   raw?: string;
+  engtl?: string;
+  cdj?: string;
+  nu?: string;
 };
+
+export type OriginalLanguage = 'ja' | 'zh' | 'ko';
 
 export type State = 'published';
 
-export type Status = 'completed' | 'ongoing';
+export type Status = 'ongoing' | 'completed';
 
 export type Tag = {
   id: string;
@@ -81,15 +114,15 @@ export type Tag = {
 
 export type TagAttributes = {
   name: Title;
-  description: string;
+  description: '';
   group: Group;
   version: number;
 };
 
-export type Group = 'genre' | 'format' | 'theme';
+export type Group = 'format' | 'genre' | 'theme' | 'content';
 
 export type Title = {
-  en?: string;
+  en: string;
 };
 
 export type TagType = 'tag';
@@ -97,39 +130,20 @@ export type TagType = 'tag';
 export type Relationship = {
   id: string;
   type: RelationshipType;
-  attributes?: RelationshipAttributes;
-  related?: string;
+  related?: Related;
 };
 
-export type RelationshipAttributes = {
-  name?: string;
-  imageUrl?: null;
-  biography?: Title;
-  twitter?: null | string;
-  pixiv?: null | string;
-  melonBook?: null;
-  fanBox?: null;
-  booth?: null;
-  nicoVideo?: null;
-  skeb?: null;
-  fantia?: null;
-  tumblr?: null | string;
-  youtube?: null | string;
-  weibo?: null;
-  naver?: null;
-  website?: null | string;
-  createdAt: Date;
-  updatedAt: Date;
-  version: number;
-  description?: string;
-  volume?: null | string;
-  fileName?: string;
-  locale?: string;
-};
+export type Related =
+  | 'colored'
+  | 'main_story'
+  | 'spin_off'
+  | 'doujinshi'
+  | 'side_story'
+  | 'prequel';
 
 export type RelationshipType =
   | 'author'
   | 'artist'
   | 'cover_art'
-  | 'creator'
-  | 'manga';
+  | 'manga'
+  | 'creator';
