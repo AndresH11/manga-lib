@@ -1,130 +1,109 @@
-export type ResponseSearchMangaDex = {
-    status: number;
-    statusText: string;
-    data: _Data;
-};
-type _Data = {
+import { Datum } from './listLatestUpdate';
+export type ResponseSearch = {
     result: string;
     response: string;
-    data: _Datum[];
+    data: Datum[];
     limit: number;
     offset: number;
     total: number;
 };
-type _Datum = {
-    id: string;
-    type: string;
-    attributes: _DatumAttributes;
-    relationships: Array<_Relationship[]>;
-};
-type _DatumAttributes = {
-    name?: string;
-    title: _Title;
-    altTitles: _AltTitle[];
-    description: _DescriptionElement[];
+export type DatumAttributes = {
+    title: Title;
+    altTitles: AltTitle[];
+    description: PurpleDescription;
     isLocked: boolean;
-    links: _Link[];
+    links: Links | null;
     originalLanguage: string;
-    lastVolume: string;
-    lastChapter: string;
-    publicationDemographic: string;
-    status: string;
-    year: number;
-    contentRating: string;
-    tags: _Tag[];
-    state: string;
+    lastVolume: null | string;
+    lastChapter: null | string;
+    publicationDemographic: null | string;
+    status: Status;
+    year: number | null;
+    contentRating: ContentRating;
+    tags: Tag[];
+    state: State;
     chapterNumbersResetOnNewVolume: boolean;
     createdAt: Date;
     updatedAt: Date;
     version: number;
     availableTranslatedLanguages: string[];
-    latestUploadedChapter: string;
+    latestUploadedChapter: null | string;
 };
-type _AltTitle = {
-    ko?: string;
-    my?: string;
-    th?: string;
-    bn?: string;
-    ne?: string;
-    zh?: string;
-    'zh-hk'?: string;
-    mn?: string;
-    ar?: string;
-    fa?: string;
-    he?: string;
-    vi?: string;
-    ru?: string;
-    ms?: string;
-    uk?: string;
-    ta?: string;
-    hi?: string;
-    kk?: string;
-    ja?: string;
-};
-type _DescriptionElement = {
+export type AltTitle = {
     en?: string;
-    ru?: string;
-    uk?: string;
-    'es-la'?: string;
-    'pt-br'?: string;
+    ko?: string;
+    ja?: string;
+    fr?: string;
+    th?: string;
+    'zh-hk'?: string;
+    'ja-ro'?: string;
+    it?: string;
+    'zh-ro'?: string;
+    zh?: string;
 };
-type _Link = {
-    al: string;
-    ap: string;
-    bw: string;
-    kt: string;
-    mu: string;
-    amz: string;
-    cdj: string;
-    ebj: string;
-    mal: string;
-    raw: string;
-    engtl: string;
+export type ContentRating = 'safe' | 'erotica';
+export type PurpleDescription = {
+    en?: string;
+    fr?: string;
+    ja?: string;
+    ko?: string;
+    th?: string;
+    'zh-hk'?: string;
+    zh?: string;
 };
-type _Tag = {
+export type Links = {
+    ap?: string;
+    mu?: string;
+    raw?: string;
+};
+export type State = 'published';
+export type Status = 'completed' | 'ongoing';
+export type Tag = {
     id: string;
-    type: string;
-    attributes: _TagAttributes;
+    type: TagType;
+    attributes: TagAttributes;
     relationships: unknown[];
 };
-type _TagAttributes = {
-    name: _Title[];
+export type TagAttributes = {
+    name: Title;
     description: string;
-    group: string;
+    group: Group;
     version: number;
 };
-type _Title = {
-    en: string;
+export type Group = 'genre' | 'format' | 'theme';
+export type Title = {
+    en?: string;
 };
-type _Relationship = {
+export type TagType = 'tag';
+export type Relationship = {
     id: string;
-    type: string;
-    attributes?: _RelationshipAttributes;
+    type: RelationshipType;
+    attributes?: RelationshipAttributes;
     related?: string;
 };
-type _RelationshipAttributes = {
+export type RelationshipAttributes = {
     name?: string;
     imageUrl?: null;
-    biography?: _Title[];
-    twitter?: null;
-    pixiv?: null;
+    biography?: Title;
+    twitter?: null | string;
+    pixiv?: null | string;
     melonBook?: null;
     fanBox?: null;
     booth?: null;
     nicoVideo?: null;
     skeb?: null;
     fantia?: null;
-    tumblr?: null;
-    youtube?: null;
+    tumblr?: null | string;
+    youtube?: null | string;
     weibo?: null;
     naver?: null;
-    website?: null;
-    createdAt: string;
-    updatedAt: string;
+    website?: null | string;
+    createdAt: Date;
+    updatedAt: Date;
     version: number;
     description?: string;
-    volume?: string;
+    volume?: null | string;
     fileName?: string;
     locale?: string;
 };
-export {};
+export type RelationshipType = 'author' | 'artist' | 'cover_art' | 'creator' | 'manga';

@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Browser } from 'puppeteer';
+import { responseListMangaDex } from './mangadex';
+import { Languaje } from './mangadex/languaje';
+import { PagesResponse } from './mangadex/responseDataChapterInfoData';
 
 export type responseListManga = {
   totalData: number;
@@ -9,7 +12,7 @@ export type responseListManga = {
   totalPage?: number;
   currentPage: number;
   data: {
-    _id: string;
+    _id: number;
     image_thumbnail: string;
     title: string;
     href: string;
@@ -70,24 +73,33 @@ export interface AbstractMangaFactory {
   browser?: Promise<Browser>;
   all_genres: genre[];
 
-  getListLatestUpdate(page?: number): Promise<responseListManga>;
+  getListLatestUpdate(
+    page?: number,
+    isErotict?: boolean,
+    languje?: string,
+    tags1?: string[],
+    order?: object
+  ): Promise<responseListMangaDex | responseListManga>;
 
-  getDetailManga(url: string): Promise<responseDetailManga>;
+  getDetailManga(url: string, languaje: Languaje): Promise<responseDetailManga>;
 
   getDataChapter(
     url_chapter: string,
-    url?: string,
-    path?: string,
-    prev_chapter?: chapter,
-    next_chapter?: chapter
+    languaje: string,
+    offset?: string
   ): Promise<responseChapter>;
 
-  getListByGenre(
+  getPages(sourceId: string): Promise<PagesResponse>;
+
+  /*getListByGenre(
     genre: genre,
     page?: number,
     status?: any,
     sort?: any
-  ): Promise<responseListManga>;
+  ): Promise<responseListManga>;*/
 
-  search(keyword: string, page?: number): Promise<responseListManga>;
+  search(
+    keyword: string,
+    page?: number
+  ): Promise<responseListMangaDex | responseListManga>;
 }

@@ -44,6 +44,12 @@ class Toonily {
         this.baseUrl = baseUrl;
         this.all_genres = [];
     }
+    getPages(sourceId) {
+        throw new Error('Method not implemented.');
+    }
+    getListRandom(page) {
+        throw new Error('Method not implemented.');
+    }
     getListByGenre(genre, page, status, sort) {
         throw new Error('Method not implemented.');
     }

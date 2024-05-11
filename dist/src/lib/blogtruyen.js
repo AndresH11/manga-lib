@@ -23,6 +23,12 @@ class Blogtruyen {
         });
         this.all_genres = [];
     }
+    getPages(sourceId) {
+        throw new Error('Method not implemented.');
+    }
+    getListRandom(page) {
+        throw new Error('Method not implemented.');
+    }
     search(keyword, page = 1) {
         return __awaiter(this, void 0, void 0, function* () {
             const _page = yield (yield this.browser).newPage();
@@ -71,7 +77,7 @@ class Blogtruyen {
             });
             yield _page.goto(`${this.baseUrl}${path}`);
             const element = yield _page.$$('#wrapper > section.main-content > div:nth-child(1) >  div:nth-child(1) > article > section > div.list > p:not(.uppercase)');
-            let totalPage = parseInt((0, validate_1.not_null)(yield _page.$eval('#wrapper > section.main-content > div >  div:nth-child(1) > article > section > div.paging > span:last-child > a', (el) => el.getAttribute('href')))
+            const totalPage = parseInt((0, validate_1.not_null)(yield _page.$eval('#wrapper > section.main-content > div >  div:nth-child(1) > article > section > div.paging > span:last-child > a', (el) => el.getAttribute('href')))
                 .split('javascript:LoadMangaPage(')[1]
                 .split(')')[0]);
             return {

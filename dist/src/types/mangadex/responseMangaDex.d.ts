@@ -1,6 +1,6 @@
-import { chapter, genre, image_chapter } from '../type';
-import { Description, Links, Relationship } from './responseDetailsGenres';
-export type responseDetailMangaDex = {
+import { chapter, genre } from '../type';
+import { Links, Relationship } from './responseDetailsGenres';
+export type ResponseDetailMangaDex = {
     path: string;
     url: string;
     author: string;
@@ -8,20 +8,23 @@ export type responseDetailMangaDex = {
     status: string;
     genres: genre[];
     chapters: chapter[];
-    description: Description;
+    description: string;
     year: number;
     relationships: Relationship[];
     links: Links;
     originalLanguage: string;
     availableTranslatedLanguages: string[];
 };
-export type responseChapterMangaDex = {
-    url?: string;
-    path?: string;
+export type ResponseChapterMangaDex = {
+    limit: number;
+    offset: number;
+    totalData: number;
+    data: Data1[];
+};
+export type Data1 = {
+    chapter: string;
     title: string;
-    chapter_data: image_chapter[];
-    prev_chapter: chapter | null;
-    next_chapter: chapter | null;
-    externalUrl: string | null;
+    externalUrl: null;
     pages: number;
+    id: string;
 };

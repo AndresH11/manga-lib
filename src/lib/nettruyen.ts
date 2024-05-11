@@ -15,6 +15,8 @@ import {
   NETTRUYEN_SORT_FILTER,
   NETTRUYEN_STATUS_FILTER,
 } from '../constants/filter';
+import { responseListMangaDex } from '../types/mangadex';
+import { PagesResponse } from '../types/mangadex/responseDataChapterInfoData';
 
 export class Nettruyen implements AbstractMangaFactory {
   baseUrl: string;
@@ -27,6 +29,14 @@ export class Nettruyen implements AbstractMangaFactory {
       headless: 'new',
     });
     this.all_genres = [] as genre[];
+  }
+  getPages(sourceId: string): Promise<PagesResponse> {
+    throw new Error('Method not implemented.');
+  }
+  getListRandom(
+    page?: number
+  ): Promise<responseListManga | responseListMangaDex> {
+    throw new Error('Method not implemented.');
   }
 
   async search(keyword: string, page = 1): Promise<responseListManga> {

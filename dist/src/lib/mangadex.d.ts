@@ -1,12 +1,14 @@
-import { AbstractMangaFactory, chapter, genre, responseListManga } from '../types/type';
-import { responseChapterMangaDex, responseDetailMangaDex } from '../types/mangadex/responseMangaDex';
+import { AbstractMangaFactory, genre, responseChapter } from '../types/type';
+import { ResponseDetailMangaDex, responseListMangaDex } from '../types/mangadex';
+import { Languaje } from '../types/mangadex/languaje';
+import { PagesResponse } from '../types/mangadex/responseDataChapterInfoData';
 export declare class Mangadex implements AbstractMangaFactory {
     baseUrl: string;
     all_genres: genre[];
     constructor(baseUrl: string);
-    getListByGenre(genre: genre, page?: number | undefined, status?: any, sort?: any): Promise<responseListManga>;
-    getListLatestUpdate(page?: number | undefined): Promise<responseListManga>;
-    getDetailManga(url: string): Promise<responseDetailMangaDex>;
-    getDataChapter(url_chapter: string, url?: string | undefined, path?: string | undefined, prev_chapter?: chapter | undefined, next_chapter?: chapter | undefined): Promise<responseChapterMangaDex>;
-    search(keyword: string, page?: number | undefined): Promise<responseListManga>;
+    getListLatestUpdate(page?: number | undefined, isErotict?: boolean, languje?: string, tags1?: string[], order?: object): Promise<responseListMangaDex>;
+    getDetailManga(url: string, languje: Languaje): Promise<ResponseDetailMangaDex>;
+    getDataChapter(url_chapter: string, languje?: string, offset?: string, orderBy?: string): Promise<responseChapter>;
+    getPages(sourceId: string): Promise<PagesResponse>;
+    search(keyword: string, page?: number | undefined): Promise<responseListMangaDex>;
 }

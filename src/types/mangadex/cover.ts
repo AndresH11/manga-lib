@@ -1,10 +1,10 @@
 export type Cover = {
   result: string;
   response: string;
-  data: Data;
+  data: _Data;
 };
 
-export type Data = {
+export type _Data = {
   id: string;
   type: string;
   attributes: Attributes;

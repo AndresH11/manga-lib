@@ -14,6 +14,8 @@ import {
   NETTRUYEN_SORT_FILTER,
   NETTRUYEN_STATUS_FILTER,
 } from '../constants/filter';
+import { responseListMangaDex } from '../types/mangadex';
+import { PagesResponse } from '../types/mangadex/responseDataChapterInfoData';
 
 export class Blogtruyen implements AbstractMangaFactory {
   baseUrl: string;
@@ -26,6 +28,14 @@ export class Blogtruyen implements AbstractMangaFactory {
       headless: 'new',
     });
     this.all_genres = [] as genre[];
+  }
+  getPages(sourceId: string): Promise<PagesResponse> {
+    throw new Error('Method not implemented.');
+  }
+  getListRandom(
+    page?: number
+  ): Promise<responseListMangaDex | responseListManga> {
+    throw new Error('Method not implemented.');
   }
 
   async search(keyword: string, page = 1): Promise<responseListManga> {
@@ -101,7 +111,7 @@ export class Blogtruyen implements AbstractMangaFactory {
     const element = await _page.$$(
       '#wrapper > section.main-content > div:nth-child(1) >  div:nth-child(1) > article > section > div.list > p:not(.uppercase)'
     );
-    let totalPage = parseInt(
+    const totalPage = parseInt(
       not_null(
         await _page.$eval(
           '#wrapper > section.main-content > div >  div:nth-child(1) > article > section > div.paging > span:last-child > a',
@@ -170,6 +180,7 @@ export class Blogtruyen implements AbstractMangaFactory {
           _id: i,
           src_origin: not_null(_data_image.src_origin),
           src_cdn: not_null(_data_image.src_cdn),
+          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
           alt: not_null(title + ' id : ' + i),
         };
       })

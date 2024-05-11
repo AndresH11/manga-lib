@@ -1,18 +1,18 @@
 export type ResponseDetailsGenres = {
     result: string;
     response: string;
-    data: _DataData;
+    data: Data;
 };
-type _DataData = {
+type Data = {
     id: string;
-    type: string;
-    attributes: _Attributes;
+    type: RelationshipType;
+    attributes: DataAttributes;
     relationships: Relationship[];
 };
-type _Attributes = {
-    title: _Title;
-    altTitles: _AltTitle[];
-    description: Description;
+type DataAttributes = {
+    title: Title;
+    altTitles: AltTitle[];
+    description: PurpleDescription;
     isLocked: boolean;
     links: Links;
     originalLanguage: string;
@@ -22,45 +22,16 @@ type _Attributes = {
     status: string;
     year: number;
     contentRating: string;
-    tags: _Tag[];
+    tags: Tag[];
     state: string;
     chapterNumbersResetOnNewVolume: boolean;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
     version: number;
     availableTranslatedLanguages: string[];
     latestUploadedChapter: string;
 };
-export type Description = {
-    en: string;
-    run: string;
-    uk: string;
-    'es-la': string;
-    'pr-br': string;
-};
-export type Links = {
-    al: string;
-    ap: string;
-    bw: string;
-    kt: string;
-    mu: string;
-    amz: string;
-    cdj: string;
-    ebj: string;
-    mal: number;
-    raw: string;
-    engtl: string;
-};
-type _Title = {
-    en: string;
-};
-export type Relationship = {
-    id: string;
-    type: string;
-    attributes?: _RelationshipAttributes;
-    related?: string;
-};
-type _AltTitle = {
+type AltTitle = {
     ko?: string;
     my?: string;
     th?: string;
@@ -81,22 +52,52 @@ type _AltTitle = {
     kk?: string;
     ja?: string;
 };
-type _Tag = {
+export type PurpleDescription = {
+    en: string;
+    ru: string;
+    uk: string;
+    'es-la': string;
+    'pt-br': string;
+};
+export type Links = {
+    al: string;
+    ap: string;
+    bw: string;
+    kt: string;
+    mu: string;
+    amz: string;
+    cdj: string;
+    ebj: string;
+    mal: string;
+    raw: string;
+    engtl: string;
+};
+type Tag = {
     id: string;
-    type: string;
+    type: TagType;
     attributes: TagAttributes;
     relationships: unknown[];
 };
 type TagAttributes = {
-    name: _Title;
+    name: Title;
     description: string;
     group: string;
     version: number;
 };
-type _RelationshipAttributes = {
-    name: string;
+type Title = {
+    en: string;
+};
+type TagType = 'tag';
+export type Relationship = {
+    id: string;
+    type: RelationshipType;
+    attributes?: RelationshipAttributes;
+    related?: Related;
+};
+type RelationshipAttributes = {
+    name?: string;
     imageUrl?: null;
-    biography?: _Title[];
+    biography?: Title;
     twitter?: null;
     pixiv?: null;
     melonBook?: null;
@@ -110,8 +111,14 @@ type _RelationshipAttributes = {
     weibo?: null;
     naver?: null;
     website?: null;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
     version: number;
+    description?: string;
+    volume?: string;
+    fileName?: string;
+    locale?: string;
 };
+type Related = 'doujinshi' | 'side_story' | 'spin_off' | 'colored' | 'adapted_from' | 'prequel' | 'alternate_version';
+type RelationshipType = 'author' | 'artist' | 'cover_art' | 'manga';
 export {};

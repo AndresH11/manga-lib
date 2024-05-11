@@ -9,6 +9,7 @@ import {
   ResponseChapterMangaDex,
   ResponseDetailMangaDex,
 } from './responseMangaDex';
+import { responseListMangaDex } from './responseListManga';
 
 export {
   ResponseChapterData,
@@ -20,4 +21,5 @@ export {
   ResponseDetailMangaDex,
   ResponseChapterMangaDex,
   Cover,
+  responseListMangaDex,
 };

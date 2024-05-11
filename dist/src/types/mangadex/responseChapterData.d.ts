@@ -1,9 +1,9 @@
 export type ResponseChapterData = {
     result: string;
     baseUrl: string;
-    chapter: _Chapter;
+    chapter: Chapter;
 };
-type _Chapter = {
+type Chapter = {
     hash: string;
     data: string[];
     dataSaver: string[];

@@ -13,6 +13,8 @@ import {
 } from '../types/type';
 import { useGetDataItemsManga } from '../hooks/getListLatest';
 import { Browser } from 'puppeteer';
+import { responseListMangaDex } from '../types/mangadex';
+import { PagesResponse } from '../types/mangadex/responseDataChapterInfoData';
 
 export class Toonily implements AbstractMangaFactory {
   baseUrl: string;
@@ -21,6 +23,14 @@ export class Toonily implements AbstractMangaFactory {
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
     this.all_genres = [] as genre[];
+  }
+  getPages(sourceId: string): Promise<PagesResponse> {
+    throw new Error('Method not implemented.');
+  }
+  getListRandom(
+    page?: number
+  ): Promise<responseListMangaDex | responseListManga> {
+    throw new Error('Method not implemented.');
   }
   browser?: Promise<Browser> | undefined;
   getListByGenre(

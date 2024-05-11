@@ -1,3 +1,5 @@
+import { Datum } from './listLatestUpdate';
+
 export type ResponseSearch = {
   result: string;
   response: string;
@@ -7,12 +9,12 @@ export type ResponseSearch = {
   total: number;
 };
 
-export type Datum = {
+/*export type Datum = {
   id: string;
   type: RelationshipType;
   attributes: DatumAttributes;
   relationships: Relationship[];
-};
+};*/
 
 export type DatumAttributes = {
   title: Title;

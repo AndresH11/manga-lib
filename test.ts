@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 // import axios from "axios";
 // import * as cheerio from "cheerio";
-/*import { Manga, MangaType } from './src';*/
+//import { Manga, MangaType } from './src';
 
 // void (async () => {
 //   const t = await axios("https://ww5.mangakakalot.tv/");
@@ -40,10 +40,13 @@
 //   };
 // });
 
-/*const t = new Manga().build(MangaType.MANGADEX);
+//const t = new Manga().build(MangaType.MANGADEX);
 
 void (async () => {
   //console.log(await t.search('naruto'));
-  //console.log(await t.getDetailManga('6b1eb93e-473a-4ab3-9922-1a66d2a29a4a'));
-  console.log(await t.getDataChapter('a9d38ece-c007-433f-beb9-3a7d2554fc3f'));
-})();*/
+  //console.log(await t.getListLatestUpdate(0, false, [], { rating: 'desc' }));
+  //console.log(
+  //  await t.getDetailManga('6b1eb93e-473a-4ab3-9922-1a66d2a29a4a', Languaje.EN)
+  //);
+  //console.log(await t.getDataChapter('4d6decd4-835d-4905-9534-2571dae07bcd'));
+})();

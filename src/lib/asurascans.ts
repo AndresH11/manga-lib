@@ -18,6 +18,8 @@ import {
 import { not_null } from '../utils/validate';
 import { useGetDataItemsManga } from '../hooks/getListLatest';
 import { useGetDataChapter } from '../hooks/getDataChapter';
+import { responseListMangaDex } from '../types/mangadex';
+import { PagesResponse } from '../types/mangadex/responseDataChapterInfoData';
 
 export class AsuraScans implements AbstractMangaFactory {
   baseUrl: string;
@@ -30,6 +32,14 @@ export class AsuraScans implements AbstractMangaFactory {
       headless: 'new',
     });
     this.all_genres = [] as genre[];
+  }
+  getPages(sourceId: string): Promise<PagesResponse> {
+    throw new Error('Method not implemented.');
+  }
+  getListRandom(
+    page?: number
+  ): Promise<responseListMangaDex | responseListManga> {
+    throw new Error('Method not implemented.');
   }
 
   async search(keyword: string, page = 1): Promise<responseListManga> {

@@ -14,15 +14,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Mangadex = void 0;
 const axios_1 = __importDefault(require("axios"));
+const mangadex_1 = require("../utils/mangadex");
 class Mangadex {
     constructor(baseUrl) {
         this.baseUrl = baseUrl;
         this.all_genres = [];
     }
-    getListByGenre(genre, page, status, sort) {
-        throw new Error('Method not implemented.');
-    }
-    getListLatestUpdate(page) {
+    getListLatestUpdate(page, isErotict, languje, tags1, order) {
         return __awaiter(this, void 0, void 0, function* () {
             let totalData = 0;
             let data = [];
@@ -32,173 +30,178 @@ class Mangadex {
                     offset = page;
                 else
                     throw new Error('Offset is out of bound');
-            yield axios_1.default
-                .get(`https://api.mangadex.org/manga?limit=16&offset=${offset}&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic`)
-                .then(function (response) {
-                const listLatestUpdate = response.data.data;
-                totalData = response.data.total;
-                data = listLatestUpdate.map((e, i) => {
-                    return {
-                        _id: offset + i,
-                        title: e.attributes.title.en,
-                        href: `/${e.id}`,
-                        image_thumbnail: 'not implemented',
-                    };
+            try {
+                const tags = yield axios_1.default.get(`https://api.mangadex.org/manga/tag`);
+                const tags2 = tags.data;
+                let includedTagIDs = [];
+                let excludedTagIDs = [];
+                if (tags1.length > 0) {
+                    includedTagIDs = tags2.data
+                        .filter((tag) => tags1 === null || tags1 === void 0 ? void 0 : tags1.includes(tag.attributes.name.en))
+                        .map((tag) => tag.id);
+                    excludedTagIDs = tags2.data
+                        .filter((tag) => !(tags1 === null || tags1 === void 0 ? void 0 : tags1.includes(tag.attributes.name.en)))
+                        .map((tag) => tag.id);
+                }
+                const contentRating = ['safe'];
+                if (isErotict)
+                    contentRating.push('pornographic', 'erotica', 'uggestive');
+                const url = languje == 'es'
+                    ? `https://api.mangadex.org/manga?availableTranslatedLanguage[]=es&availableTranslatedLanguage[]=es-la`
+                    :
+                        `https://api.mangadex.org/manga?availableTranslatedLanguage[]=${languje}`;
+                const response = yield (0, axios_1.default)({
+                    method: 'GET',
+                    url: url,
+                    params: {
+                        limit: '10',
+                        offset: offset,
+                        contentRating: contentRating,
+                        order: order,
+                        includedTags: includedTagIDs,
+                        excludedTags: excludedTagIDs,
+                    },
                 });
-            })
-                .catch(function (error) {
+                const listLatestUpdate = response.data;
+                totalData = listLatestUpdate.total;
+                data = yield Promise.all(listLatestUpdate.data.map((manga) => __awaiter(this, void 0, void 0, function* () {
+                    const cover = yield (0, mangadex_1.getCover)(manga);
+                    return {
+                        _id: manga.id,
+                        title: manga.attributes.title.en,
+                        image_thumbnail: `https://uploads.mangadex.org/covers/${manga.id}/${cover.data.attributes.fileName}`,
+                    };
+                })));
+                return {
+                    totalData,
+                    canNext: offset <= 9967 ? true : false,
+                    canPrev: offset === 0 ? false : true,
+                    totalPage: 9983,
+                    currentPage: offset,
+                    data,
+                };
+            }
+            catch (error) {
                 console.log(error);
-            });
-            return {
-                totalData,
-                canNext: offset <= 9967 ? true : false,
-                canPrev: offset === 0 ? false : true,
-                totalPage: 9983,
-                currentPage: offset,
-                data,
-            };
+                throw error;
+            }
         });
     }
-    getDetailManga(url) {
-        var _a, _b, _c, _d, _e;
+    getDetailManga(url, languje) {
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const sourceId = url;
-                const genres = [];
                 const responseGenres = yield axios_1.default.get(`https://api.mangadex.org/manga/${sourceId}?includes[]=artist&includes[]=author&includes[]=cover_art`);
                 const responseGenresAxios = responseGenres.data;
                 const infoData = responseGenresAxios.data;
-                const author = (_b = (_a = infoData.relationships[0].attributes) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
-                const title = (_c = infoData.attributes.title.en) !== null && _c !== void 0 ? _c : 'null';
-                const status = (_d = infoData.attributes.status) !== null && _d !== void 0 ? _d : 'null';
-                const description = (_e = infoData.attributes.description) !== null && _e !== void 0 ? _e : 'null';
-                const links = infoData.attributes.links;
-                const originalLanguage = infoData.attributes.originalLanguage;
-                const year = infoData.attributes.year;
-                const availableTranslatedLanguages = infoData.attributes.availableTranslatedLanguages;
-                const relationships = infoData.relationships;
-                infoData.attributes.tags.map((e) => {
-                    genres.push({
-                        url: `https://mangadex.org/tag/` + e.id,
-                        name: e.attributes.name.en,
-                        path: '/tag/' + e.id,
-                    });
-                });
-                const chapters = [];
-                const responseChapters = yield axios_1.default.get(`https://api.mangadex.org/manga/${sourceId}/feed?translatedLanguage[]=es-la&includes[]=scanlation_group&&includes[]=user&order[volume]=desc&order[chapter]=desc&offset=0&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic`);
-                const responseChaptersAxio = responseChapters.data;
-                const chapterData = responseChaptersAxio.data;
-                chapterData.map((e) => {
-                    chapters.push({
-                        path: '/' + e.id,
-                        url: `https://mangadex.org/chapter/${e.id}`,
-                        parent_href: '/chapter/' + e.id,
-                        title: e.attributes.title,
-                    });
-                });
+                const title = (_a = infoData.attributes.title.en) !== null && _a !== void 0 ? _a : 'null';
+                const description = (_c = (_b = infoData.attributes.description) === null || _b === void 0 ? void 0 : _b.en) !== null && _c !== void 0 ? _c : 'null';
                 return {
                     path: this.baseUrl + `/title/${sourceId}`,
                     url,
-                    author,
-                    genres,
                     title,
-                    status,
                     description,
-                    year,
-                    relationships,
-                    links,
-                    originalLanguage,
-                    availableTranslatedLanguages,
-                    chapters,
                 };
             }
             catch (error) {
                 console.log(error);
-                return error;
+                throw error;
             }
         });
     }
-    getDataChapter(url_chapter, url, path, prev_chapter, next_chapter) {
-        var _a;
+    getDataChapter(url_chapter, languje, offset, orderBy) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const sourceId = url_chapter;
-                const chapter_data = [];
-                const responseInfoData = yield axios_1.default.get(`https://api.mangadex.org/chapter/${sourceId}?includes[]=scanlation_group&includes[]=manga&includes[]=user`);
+                const data = [];
+                let order = true;
+                if (orderBy == 'desc')
+                    order = false;
+                const url = languje == 'es'
+                    ?
+                        `https://api.mangadex.org/manga/${sourceId}/feed?translatedLanguage[]=es&translatedLanguage[]=es-la&includes[]=scanlation_group&&includes[]=user&order[volume]=${order ? 'asc' : 'desc'}&order[chapter]=${order ? 'asc' : 'desc'}&offset=${offset}&limit=10&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic`
+                    : `https://api.mangadex.org/manga/${sourceId}/feed?translatedLanguage[]=${languje}&includes[]=scanlation_group&&includes[]=user&order[volume]=${order ? 'asc' : 'desc'}&order[chapter]=${order ? 'asc' : 'desc'}&offset=${offset}&limit=10&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic`;
+                const responseInfoData = yield axios_1.default.get(url);
                 const responseAxiosInfo = responseInfoData.data;
                 const infoData = responseAxiosInfo.data;
-                const externalUrl = infoData.attributes.externalUrl;
-                const pages = infoData.attributes.pages;
-                let mangaId = 0;
-                for (let i = 0; i < infoData.relationships.length; i++)
-                    if (infoData.relationships[i].type == 'manga') {
-                        mangaId = i;
-                        break;
-                    }
-                const title = `${(_a = infoData.relationships[mangaId].attributes.title) === null || _a === void 0 ? void 0 : _a.en} chap ${infoData.attributes.chapter} [${infoData.attributes.title}]`;
-                const responseImgData = yield axios_1.default.get(`https://api.mangadex.org/at-home/server/${sourceId}?forcePort443=false`);
-                const responseAxiosImgData = responseImgData.data;
-                const hash = responseAxiosImgData.chapter.hash;
-                responseAxiosImgData.chapter.data.map((e, i) => {
-                    chapter_data.push({
-                        _id: i,
-                        src_origin: `https://uploads.mangadex.org/data/${hash}/${responseAxiosImgData.chapter.data[i]}`,
-                        alt: `${title} id: ${i}`,
+                for (let i = 0; i < infoData.length; i++) {
+                    data.push({
+                        id: infoData[i].id,
+                        chapter: infoData[i].attributes.chapter,
+                        title: infoData[i].attributes.title,
+                        externalUrl: infoData[i].attributes.externalUrl,
+                        pages: infoData[i].attributes.pages,
                     });
-                });
+                }
                 return {
-                    url: `${this.baseUrl}/chapter/${sourceId}`,
-                    path: `/chapter/${sourceId}`,
-                    title,
-                    externalUrl,
-                    pages,
-                    chapter_data,
-                    prev_chapter: null,
-                    next_chapter: null,
+                    limit: responseAxiosInfo.limit,
+                    offset: responseAxiosInfo.offset,
+                    totalData: responseAxiosInfo.total,
+                    data,
                 };
             }
             catch (error) {
                 console.log(error);
-                return error;
+                throw error;
+            }
+        });
+    }
+    getPages(sourceId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const page_data = [];
+            try {
+                const responseImgData = yield axios_1.default.get(`https://api.mangadex.org/at-home/server/${sourceId}?forcePort443=false`);
+                const responseAxiosImgData = responseImgData.data;
+                const hash = responseAxiosImgData.chapter.hash;
+                responseAxiosImgData.chapter.data.map((_, i) => {
+                    page_data.push(`https://uploads.mangadex.org/data/${hash}/${responseAxiosImgData.chapter.data[i]}`);
+                });
+                return {
+                    data: page_data,
+                };
+            }
+            catch (error) {
+                console.log(error);
+                throw error;
             }
         });
     }
     search(keyword, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            let totalData = 0;
-            let data = [];
-            let offset = 0;
-            if (page != undefined)
-                if (page >= 0 && page <= 9983)
-                    offset = page;
-                else
-                    throw new Error('Offset is out of bound');
-            yield axios_1.default
-                .get(`https://api.mangadex.org/manga?limit=10&offset=${offset}&includes[]=cover_art&includes[]=artist&includes[]=author&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&title=${keyword}&order[relevance]=desc`)
-                .then(function (response) {
-                totalData = response.data.total;
-                const listLatestUpdate = response.data.data;
-                totalData = response.data.total;
-                data = listLatestUpdate.map((e, i) => {
+            try {
+                let totalData = 0;
+                let data = [];
+                let offset = 0;
+                if (page != undefined)
+                    if (page >= 0 && page <= 9983)
+                        offset = page;
+                    else
+                        throw new Error('Offset is out of bound');
+                const responseAxiosMangas = yield axios_1.default.get(`https://api.mangadex.org/manga?limit=10&offset=${offset}&includes[]=cover_art&includes[]=artist&includes[]=author&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&title=${keyword}&order[relevance]=desc`);
+                const listLatestUpdate = responseAxiosMangas.data;
+                totalData = listLatestUpdate.total;
+                data = yield Promise.all(listLatestUpdate.data.map((manga) => __awaiter(this, void 0, void 0, function* () {
+                    const cover = yield (0, mangadex_1.getCover)(manga);
                     return {
-                        _id: i,
-                        title: e.attributes.title.en,
-                        href: e.id,
-                        image_thumbnail: 'not implemented',
+                        _id: manga.id,
+                        title: manga.attributes.title.en,
+                        image_thumbnail: `https://uploads.mangadex.org/covers/${manga.id}/${cover.data.attributes.fileName}`,
                     };
-                });
-            })
-                .catch(function (error) {
+                })));
+                return {
+                    totalData,
+                    canNext: offset <= 9967 ? true : false,
+                    canPrev: offset >= 16 ? true : false,
+                    totalPage: 9983,
+                    currentPage: offset,
+                    data,
+                };
+            }
+            catch (error) {
                 console.log(error);
-            });
-            return {
-                totalData,
-                canNext: offset <= 9967 ? true : false,
-                canPrev: offset >= 16 ? true : false,
-                totalPage: 9983,
-                currentPage: offset,
-                data,
-            };
+                throw error;
+            }
         });
     }
 }

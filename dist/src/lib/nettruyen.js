@@ -23,6 +23,12 @@ class Nettruyen {
         });
         this.all_genres = [];
     }
+    getPages(sourceId) {
+        throw new Error('Method not implemented.');
+    }
+    getListRandom(page) {
+        throw new Error('Method not implemented.');
+    }
     search(keyword, page = 1) {
         return __awaiter(this, void 0, void 0, function* () {
             const _page = yield (yield this.browser).newPage();
